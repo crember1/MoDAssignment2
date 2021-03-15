@@ -209,8 +209,8 @@ h4 {
   L.circleMarker([35.22732,-80.8382], path_o).addTo(map_1)
                                    
                                    
-  d3.json("mergedFiles.json", function(json) {
-    console.log(json);
+  d3.csv("Hubway_Stations_as_of_July_2017.csv", function(csv) {
+    console.log(csv);
 
     var map_2 = L.mapbox.map('map_2')
     .setView([35.22732,-80.83827], 12)
@@ -220,9 +220,9 @@ h4 {
                             
   
 
-    json.data.stations.forEach(function(station){
-      station.lat = +station.lat;
-      station.lng = +station.lon;
+    csv.forEach(function(station){
+      station.lat = +d["Latitude"];
+      station.lng = +d["Longitude"];
       var path_options = {
         radius :  6,
         color : d3.rgb(16,52,166).brighter(),
