@@ -215,18 +215,18 @@ h4 {
       marker.addTo(map);
     })
   }
-                                   
-  d3.csv("Hubway_Stations_as_of_July_2017.csv")
-    .then(function(csv) {
-    data = csv;
-    addMarkers();
-  });
 
     var map_2 = L.mapbox.map('map_2')
     .setView([42.362522,-71.059501], 12)
     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
     map_2
     .scrollWheelZoom.disable();
+    
+  d3.csv("Hubway_Stations_as_of_July_2017.csv")
+    .then(function(csv) {
+    data = csv;
+    addMarkers();
+  });
                             
   
 
