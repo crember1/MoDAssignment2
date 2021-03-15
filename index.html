@@ -186,9 +186,10 @@ h4 {
 
 
   <script>
+  
 
-  L.mapbox.accessToken = 'pk.eyJ1IjoiZGltcCIsImEiOiJkRnlra3RjIn0.E9CTYzNUEx0yb3dcfV4SiA';
-
+  L.mapbox.accessToken = 'pk.eyJ1IjoiZGltcCIsImEiOiJkRnlra3RjIn0.E9CTYzNUEx0yb3dcfV4SiA';  
+    
   var map_1 = L.mapbox.map('map_1')
   .setView([42.362522,-71.059501], 12)
   .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
@@ -206,10 +207,20 @@ h4 {
       };
                                    
   L.circleMarker([42.362522,-71.059501], path_o).addTo(map_1)
+  
+  var data;
+  function addMarkers () {
+    data.forEach(function(d) {
+      var marker = L.circleMarker([+d.latitude, +d.longitude]);
+      marker.addTo(map);
+    })
+  }
                                    
-                                   
-  d3.csv("Hubway_Stations_as_of_July_2017.csv", function(csv) {
-    console.log(csv);
+  d3.csv("Hubway_Stations_as_of_July_2017.csv")
+    .then(function(csv) {
+    data = csv;
+    addMarkers();
+  });
 
     var map_2 = L.mapbox.map('map_2')
     .setView([42.362522,-71.059501], 12)
