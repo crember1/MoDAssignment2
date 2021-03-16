@@ -29,7 +29,7 @@ h4 {
   <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
   <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
   <style>
-  #map_1,#map_2,#map_3 {
+  #map_1,#map_2, #map_2_5, #map_3 {
     height: 500px;
   }
     hr.line1{
@@ -127,6 +127,7 @@ h4 {
 
 
   <div id="map_2" class="one-bottom"></div>
+  <div id="map_2_5" class="one-bottom"></div>
                                                                      
   <div class="container one-bottom" >
     <div class="twelve columns">
@@ -190,6 +191,7 @@ h4 {
     <p style="color:white">Brian Ferrell contributed to creating diagrams with Mecklenburg county and B-Cycle data using GIS programs, webpage layout, research and conclusion. </p>
   </div>
 
+  <p id="demo"></p>
 
 
   <script>
@@ -229,6 +231,7 @@ h4 {
                                     
                                     
     d3.csv("201706-hubway-tripdata.csv", function(tripData) {
+      d3.csv("201906-bluebikes-tripdata.csv", function(tripData2019) {
       d3.csv("Hubway_Stations_as_of_July_2017.csv", function(station_2017Data){
         //console.log(tripData);
         
@@ -254,17 +257,26 @@ h4 {
         {
           var trip = {};
 
-          //templates
-          //trip.something = +d["something"];
+          trip.starttime = d3.time.format("%Y-%m-%d %H:%M:%S").parse(aData["starttime"].slice(0,-5));
+          trip.stoptime = d3.time.format("%Y-%m-%d %H:%M:%S").parse(aData["stoptime"].slice(0,-5));
+          trip.duration = +aData["tripduration"];
+          trip.start_station = +aData["start station id"];
+          trip.end_station = +aData["end station id"];
+          trip.start_station_name = aData["start station name"];
+          trip.end_station_name = aData["end station name"];
+          trip.start_station_lat = +aData["start station latitude"];
+          trip.end_station_lat = +aData["end station latitude"];
+          trip.start_station_lng = +aData["start station longitude"];
+          trip.end_station_lng = +aData["end station longitude"];
+          trip.bikeid = +aData["bikeid"];
+          trip.usertype = aData["usertype"];
+          
+          return trip;
+        });
 
-          //time.format not working
-          //https://stackoverflow.com/a/39370458
-          //parse not working
-          //
-          //trip.something = d3.time.format("%Y-%m-%d %H:%M:%S").parse(d["something"].slice(0,-5));
-
-          //https://stackoverflow.com/a/37774663
-          //var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+        var trips2019 = tripData2019.map(function(aData)
+        {
+          var trip = {};
 
           trip.starttime = d3.time.format("%Y-%m-%d %H:%M:%S").parse(aData["starttime"].slice(0,-5));
           trip.stoptime = d3.time.format("%Y-%m-%d %H:%M:%S").parse(aData["stoptime"].slice(0,-5));
@@ -284,11 +296,17 @@ h4 {
         });
 
         stationData = getStationsFromTrips(trips);
+        stationData2019 = getStationsFromTrips(trips2019);
           od_matrix = createMatrix(trips, stationData);
+
+        document.getElementById("demo").innerHTML = "NumStations: " + number_of_stations
+        + "<br>NumTrips: </br>" + number_of_trips;
 
         var color = d3.scale.linear()
           .domain([0, stationData.length])
-          .range([d3.rgb(255,0,0), d3.rgb(50,0,0)]);
+          .range([d3.rgb(136, 0, 255), d3.rgb(22, 0, 50)]);
+
+        var stationNameArray = [];
 
         var map_2 = L.mapbox.map('map_2')
         .setView([42.3601,-71.0589], 12)
@@ -297,6 +315,8 @@ h4 {
         .scrollWheelZoom.disable();
 
         stations.forEach(function(station){
+
+          stationNameArray.push(station.station_name);
 
           station.station_lat = +station.station_lat;
           station.station_lng = +station.station_lng;
@@ -327,7 +347,6 @@ h4 {
             isStart = "Private Station";
           }
 
-
           
           L.circleMarker([station.station_lat, station.station_lng], path_options).addTo(map_2).bindPopup(
           "Station Name: " + station.station_name 
@@ -336,6 +355,48 @@ h4 {
           + "<br>" + isStart + "</br>");
         });
         
+
+        var map_2_5 = L.mapbox.map('map_2_5')
+        .setView([42.3601,-71.0589], 12)
+        .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
+        map_2_5
+        .scrollWheelZoom.disable();
+
+        stationData2019.forEach(function(station){
+
+          station.lat = +station.lat;
+          station.lng = +station.lng;
+           
+          var path_options = {};
+         
+          if(stationNameArray.includes(station.name))
+          {
+            path_options = {
+              radius :  6,
+              color : d3.rgb(166,16,16).brighter(),
+              stroke: true,
+              weight : 1,
+              fill : true,
+              Color: d3.rgb(166,16,16).darker(),
+            };
+          }
+          else
+          {
+            path_options = {
+              radius :  6,
+              color : d3.rgb(16,52,166).brighter(),
+              stroke: true,
+              weight : 1,
+              fill : true,
+              Color: d3.rgb(16,52,166).brighter(),
+            };
+          }
+          
+          
+          L.circleMarker([station.lat, station.lng], path_options).addTo(map_2_5).bindPopup(
+          "Station Name: " + station.name 
+          + "<br>Station ID: </br>" + station.station_id);
+        });
         /*
         var map_3 = L.mapbox.map('map_3')
         .setView([35.22732,-80.83827], 12)
@@ -508,6 +569,7 @@ h4 {
             }
 
           });
+          number_of_stations = n;
           return stations;
         }
 
@@ -543,12 +605,14 @@ h4 {
               od_matrix[startStationIndex] = [];
               for (var i = 0; i < n; i++) {
                 od_matrix[startStationIndex][i] = 0;
+                number_of_trips = number_of_trips+1;
               }
             }
             od_matrix[startStationIndex][endStationIndex]++;;
           });
           return od_matrix;
         }
+      });
       });
     });
   
