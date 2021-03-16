@@ -90,7 +90,7 @@ h4 {
 
   <div class="container one-bottom" >
     <div class="twelve columns">
-      <h5 style="color:white">Hubway Stations(hey)<h5>
+      <h5 style="color:white">Hubway Stations<h5>
       <h6 style="color:white"> Fig. 2 </h6>                   
       <p style="color:white">
         Hubway station locations in the Boston, Cambridge, Brookline, and Somerville areas as of 2017. Pre-expansion.
@@ -124,6 +124,7 @@ h4 {
       </p>
     </div>
   </div>
+
 
   <div id="map_2" class="one-bottom"></div>
   <div id="map_2_5" class="one-bottom"></div>
@@ -211,7 +212,7 @@ h4 {
     L.mapbox.accessToken = 'pk.eyJ1IjoiZGltcCIsImEiOiJkRnlra3RjIn0.E9CTYzNUEx0yb3dcfV4SiA';
 
     var map_1 = L.mapbox.map('map_1')
-    .setView([42.3601,-71.0589], 10)
+    .setView([42.3601,-71.0589], 12)
     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
     map_1
     .scrollWheelZoom.disable();
@@ -402,7 +403,6 @@ h4 {
         .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
         map_3
         .scrollWheelZoom.disable();
-
         stations.start_station_id.forEach(function(station){
           station.start_station_latitude = +station.start_station_latitude;
           station.start_station_longitude = +station.start_station_longitude;
