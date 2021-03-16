@@ -146,22 +146,21 @@ h4 {
       <h4 style="color:white">Blue Bikes Today</h4>
       <p style="color:white">Boston Blue Bike is a conventional bike sharing system in which riders unlock the vehicles through an app at stations - otherwise known as kiosks - and can return the bikes at any station when the trip is done. The Blue Bikes stations serve every line of the T, the commuter rail and ferry, and more than 60 bus routes to accomodate multi-modal trips. Five municipalities own Blue Bikes and San Fransisco based Lyft operates the bike share while Blue Cross Blue Shield of Massachusetts has a sponsorship.</p>
       <img class="container one-bottom" src="img/hubway to bluebikes diagram.svg" style="float:center;">
-
-  </div>
-  <div class="container one-bottom" >
-    <h3 style="color:white">Conclusions</h3>
-    <p style="color:white">Our maps express a story. In Fig. 3, most of the bike stations are located inside interstate 77 and 485 in the inner city accumulating the most usage combined, while there are less stations outside the city. We believe people in the inner city use these bikes to commute to and from work.
-      The stations south of Charlotte are in South End, a highly commercial area, which means people commute to and from entertainment and shopping.
-      In addition, in Fig. 5, the number of bus stations compared to bike stations are exponentially larger showing a greater interest in buses versus bikes. As you can see in the Fig. 6, there is not that many bike lanes in the city; therefore, most bikes will either be on the sidewalk or a part of traffic creating potiential self risk.</p>
-  </div>
-    
-  <div class="container one-bottom" >
-    <h3 style="color:white">Discussion</h3>
-    <h4 style="color:white">Based off all given data, these are some suggestions we have to improve the relationships between stations and other attributes in Charlotte.</h4>
-    <p style="color:white">1. Expand B-Cycle station locations to more residential areas both within the city and outside of the city to give local commuters more mobility options.</p>  
-    <p style="color:white">2. Coordinate future expansion of CATS bus stop locations to all B-Cycle station locations, giving those using the CATS bus system more mobility options going to and from the bus stops.</p> 
-    <p style="color:white">3. Expand bike lane infrastructure within the city to reach more B-Cycle station locations.</p> 
-    <p style="color:white">4. Coordinate future expansion of B-Cycle station locations with stop locations of other mobility services including the LYNX BlueLine and future options like the LYNX SilverLine.</p> 
+    </div>
+    <div class="twelve columns" >
+      <h3 style="color:white">Conclusions</h3>
+      <p style="color:white">Our maps express a story. In Fig. 3, most of the bike stations are located inside interstate 77 and 485 in the inner city accumulating the most usage combined, while there are less stations outside the city. We believe people in the inner city use these bikes to commute to and from work.
+        The stations south of Charlotte are in South End, a highly commercial area, which means people commute to and from entertainment and shopping.
+        In addition, in Fig. 5, the number of bus stations compared to bike stations are exponentially larger showing a greater interest in buses versus bikes. As you can see in the Fig. 6, there is not that many bike lanes in the city; therefore, most bikes will either be on the sidewalk or a part of traffic creating potiential self risk.</p>
+    </div>
+    <div class="twelve columns" >
+      <h3 style="color:white">Discussion</h3>
+      <h4 style="color:white">Based off all given data, these are some suggestions we have to improve the relationships between stations and other attributes in Charlotte.</h4>
+      <p style="color:white">1. Expand B-Cycle station locations to more residential areas both within the city and outside of the city to give local commuters more mobility options.</p>  
+      <p style="color:white">2. Coordinate future expansion of CATS bus stop locations to all B-Cycle station locations, giving those using the CATS bus system more mobility options going to and from the bus stops.</p> 
+      <p style="color:white">3. Expand bike lane infrastructure within the city to reach more B-Cycle station locations.</p> 
+      <p style="color:white">4. Coordinate future expansion of B-Cycle station locations with stop locations of other mobility services including the LYNX BlueLine and future options like the LYNX SilverLine.</p> 
+    </div>
   </div>                                 
 
   <div class="container one-bottom" >
@@ -196,7 +195,7 @@ h4 {
     L.mapbox.accessToken = 'pk.eyJ1IjoiZGltcCIsImEiOiJkRnlra3RjIn0.E9CTYzNUEx0yb3dcfV4SiA';
 
     var map_1 = L.mapbox.map('map_1')
-    .setView([42.3601,-71.0589], 10)
+    .setView([42.3601,-71.0589], 12)
     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
     map_1
     .scrollWheelZoom.disable();
