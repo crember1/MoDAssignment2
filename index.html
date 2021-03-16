@@ -99,8 +99,8 @@ h4 {
     </div>
   </div>
 
-  <div id="map_1" class="one-bottom"></div>
-
+  <!--<div id="map_1" class="one-bottom"></div>-->
+  <div id="map_2" class="one-bottom"></div>
 
   <div class="container one-bottom" >
     <div class="twelve columns">
@@ -112,8 +112,8 @@ h4 {
     </div>
   </div>
 
-  <div id="map_3" class="one-bottom"></div>
-
+<!--  <div id="map_3" class="one-bottom"></div>-->
+<div id="map_2_5" class="one-bottom"></div>
 
   <div class="container one-bottom" >
     <div class="twelve columns">
@@ -126,8 +126,8 @@ h4 {
   </div>
 
 
-  <div id="map_2" class="one-bottom"></div>
-  <div id="map_2_5" class="one-bottom"></div>
+
+  <div id="map_3" class="one-bottom"></div>
                                                                      
   <div class="container one-bottom" >
     <div class="twelve columns">
@@ -211,7 +211,7 @@ h4 {
 
     L.mapbox.accessToken = 'pk.eyJ1IjoiZGltcCIsImEiOiJkRnlra3RjIn0.E9CTYzNUEx0yb3dcfV4SiA';
 
-    var map_1 = L.mapbox.map('map_1')
+    /*var map_1 = L.mapbox.map('map_1')
     .setView([42.3601,-71.0589], 12)
     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
     map_1
@@ -228,7 +228,7 @@ h4 {
         };
                                     
     L.circleMarker([42.3601,-71.0589], path_o).addTo(map_1)
-                                    
+  */                            
                                     
     d3.csv("201706-hubway-tripdata.csv", function(tripData) {
       d3.csv("201906-bluebikes-tripdata.csv", function(tripData2019) {
@@ -368,7 +368,55 @@ h4 {
           station.lng = +station.lng;
            
           var path_options = {};
-         
+          var skip = false;
+
+          if(stationNameArray.includes(station.name))
+          {
+            skip = true;
+            path_options = {
+              radius :  6,
+              color : d3.rgb(166,16,16).brighter(),
+              stroke: true,
+              weight : 1,
+              fill : true,
+              Color: d3.rgb(166,16,16).darker(),
+            };
+          }
+          else
+          {
+            skip = false;
+            path_options = {
+              radius :  6,
+              color : d3.rgb(16,52,166).brighter(),
+              stroke: true,
+              weight : 1,
+              fill : true,
+              Color: d3.rgb(16,52,166).brighter(),
+            };
+          }
+          
+          if(!skip){
+          L.circleMarker([station.lat, station.lng], path_options).addTo(map_2_5).bindPopup(
+          "Station Name: " + station.name 
+          + "<br>Station ID: </br>" + station.station_id);
+          }
+        });
+
+
+
+        var map_3 = L.mapbox.map('map_3')
+        .setView([42.3601,-71.0589], 12)
+        .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
+        map_3
+        .scrollWheelZoom.disable();
+
+        stationData2019.forEach(function(station){
+
+          station.lat = +station.lat;
+          station.lng = +station.lng;
+           
+          var path_options = {};
+
           if(stationNameArray.includes(station.name))
           {
             path_options = {
@@ -392,10 +440,10 @@ h4 {
             };
           }
           
-          
-          L.circleMarker([station.lat, station.lng], path_options).addTo(map_2_5).bindPopup(
+          L.circleMarker([station.lat, station.lng], path_options).addTo(map_3).bindPopup(
           "Station Name: " + station.name 
           + "<br>Station ID: </br>" + station.station_id);
+          
         });
         /*
         var map_3 = L.mapbox.map('map_3')
@@ -403,6 +451,7 @@ h4 {
         .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10'));
         map_3
         .scrollWheelZoom.disable();
+
         stations.start_station_id.forEach(function(station){
           station.start_station_latitude = +station.start_station_latitude;
           station.start_station_longitude = +station.start_station_longitude;
