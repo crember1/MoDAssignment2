@@ -516,7 +516,7 @@ h4 {
       
         // STEP 3: Create Chord Layout
         //var chordLayout = d3.chord()
-        
+        /*
         var height2=1000, width2=2050;
         var svg2 = d3.select("body").append("svg").attr("width",width2).attr("height",height2);
 
@@ -526,7 +526,8 @@ h4 {
 
         svg2.append("g").attr("transform", "translate(300,250)").call(chLeft);  
         d3.select(self.frameElement).style("height", height2+"px").style("width", width2+"px");
-        /*
+        */
+        
         var chordLayout = d3.layout.chord()
           .matrix(od_matrix)
           .padding(0.01)
@@ -604,7 +605,7 @@ h4 {
           .on("click", function (d,i) {
           });
           
-          */
+          
           //redraw(create_svg_group("chordGraph", 800,800,xPos,yPos),od_matrix);
         // STEP 8: Change attributes of Chords (example)
         // svgGroup.selectAll(".chord")
