@@ -35,7 +35,19 @@ h4 {
     hr.line1{
         border: solid rgb(255, 255, 255); 
               }
-    
+  svg text{
+    fill:white;
+    text-anchor:middle;
+   font-size:18px;
+  }
+  svg .values text{
+    pointer-events:none;
+    stroke-width: 0.5px;
+  }
+  .groups:hover{
+    cursor:pointer;
+    font-weight:bold;
+  }  
     
     
  
@@ -43,6 +55,7 @@ h4 {
 
   <!-- D3 -->
   <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="http://vizjs.org/viz.v1.1.0.min.js"></script>
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/favicon.png">
 
@@ -176,7 +189,9 @@ h4 {
       <h6 style="color:white">Fig. 10 & Fig. 11</h6>
     </div>
   </div>
-  
+  <div class="twelve columns">
+    <h4 style="color:white">Chord Graph for 2017 trip data.</h4>
+  </div>
   <div id="chordGraph" class="one-bottom"></div>
    
   <div class="container one-bottom" >
@@ -193,7 +208,7 @@ h4 {
     <h5 style="color:white">Coral Rembert</h5>
     <p style="color:white">Coral Rembert contributed to creating the Github page, finding online data, map style and data representation style (for Fig. 1-3), page organization, adding descriptions to maps, and discussion.</p>
     <h5 style="color:white">Anibal Robles</h5>
-    <p style="color:white">Anibal Robles contributed to merging the data files and finding how to make it work in Mapbox, helped in map representation, and bug fixes.</p>
+    <p style="color:white">Anibal Robles contributed to creating the interactive graphs, implementing the multiple csv files for getting data, and implementing the chord graph.</p>
     <h5 style="color:white">Brian Ferrell</h5>
     <p style="color:white">Brian Ferrell contributed to creating diagrams with Boston and BlueBikes data using GIS programs, webpage layout, research and introduction. </p>
   </div>
@@ -244,6 +259,7 @@ h4 {
         
         var number_of_trips = 0;
         var number_of_stations = 0;
+        var colorMatrix = {};
 
         var stations = station_2017Data.map(function(aData)
         {
@@ -498,7 +514,17 @@ h4 {
       
         // STEP 3: Create Chord Layout
         //var chordLayout = d3.chord()
+        
+        var height2=1000, width2=2050;
+        var svg2 = d3.select("body").append("svg").attr("width",width2).attr("height",height2);
 
+        var chLeft = viz.ch()
+          .data(od_matrix)
+          .fill(function(d){ return colorMatrix[d];});
+
+        svg2.append("g").attr("transform", "translate(300,250)").call(chLeft);  
+        d3.select(self.frameElement).style("height", height2+"px").style("width", width2+"px");
+        /*
         var chordLayout = d3.layout.chord()
           .matrix(od_matrix)
           .padding(0.01)
@@ -576,6 +602,7 @@ h4 {
           .on("click", function (d,i) {
           });
           
+          */
           //redraw(create_svg_group("chordGraph", 800,800,xPos,yPos),od_matrix);
         // STEP 8: Change attributes of Chords (example)
         // svgGroup.selectAll(".chord")
@@ -653,21 +680,35 @@ h4 {
 
           //Create the OD matrix
           var od_matrix = [];
+          var aRandom = 0;
           tripData.forEach(function(d) {
             var  startStationIndex = indexByNameTrip.get(d.start_station);
             var  endStationIndex = indexByNameTrip.get(d.end_station);
             if (!od_matrix[startStationIndex]) {
-              od_matrix[startStationIndex] = [];
+              od_matrix[startStationIndex] = [d.start_station];
+              colorMatrix[startStationIndex] = getRandomColor();
               for (var i = 0; i < n; i++) {
                 od_matrix[startStationIndex][i] = 0;
                 number_of_trips = number_of_trips+1;
               }
+
             }
             od_matrix[startStationIndex][endStationIndex]++;;
           });
           return od_matrix;
         }
 
+        // From: https://stackoverflow.com/a/1484514 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+          }
+
+        /*
         function create_svg_group(div_id, svg_width, svg_height, svg_xPos, svg_yPos){
             var svg_group = d3.select("#"+div_id).append("svg")
               .attr("width", svg_width)
@@ -815,6 +856,7 @@ h4 {
           .text(function(d) { return d.label; });
 
           }
+          */
 
       });
       });
