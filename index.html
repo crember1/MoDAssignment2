@@ -685,7 +685,7 @@ h4 {
             var  startStationIndex = indexByNameTrip.get(d.start_station);
             var  endStationIndex = indexByNameTrip.get(d.end_station);
             if (!od_matrix[startStationIndex]) {
-              od_matrix[startStationIndex] = [d.start_station];
+              od_matrix[startStationIndex] = [];
               colorMatrix[startStationIndex] = getRandomColor();
               for (var i = 0; i < n; i++) {
                 od_matrix[startStationIndex][i] = 0;
