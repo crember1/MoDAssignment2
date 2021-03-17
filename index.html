@@ -257,6 +257,7 @@ h4 {
       d3.csv("Hubway_Stations_as_of_July_2017.csv", function(station_2017Data){
         //console.log(tripData);
         
+        var name_matrix = [];
         var number_of_trips = 0;
         var number_of_stations = 0;
         var colorMatrix = {};
@@ -689,12 +690,20 @@ h4 {
               colorMatrix[startStationIndex] = getRandomColor();
               for (var i = 0; i < n; i++) {
                 od_matrix[startStationIndex][i] = 0;
-                number_of_trips = number_of_trips+1;
+                
               }
 
             }
             od_matrix[startStationIndex][endStationIndex]++;;
+            number_of_trips = number_of_trips+1;
           });
+
+          for(var x = 0; x<od_matrix.length; x++) {
+            for(var y = 0; y<od_matrix[x].length; y++) {
+              if(od_matrix[x][y]>1)
+                name_matrix.push([nameByIndexStation.get(x), nameByIndexStation.get(y), od_matrix[x][y]]);
+            }
+          }
           return od_matrix;
         }
 
@@ -707,6 +716,8 @@ h4 {
             }
             return color;
           }
+
+          
 
         /*
         function create_svg_group(div_id, svg_width, svg_height, svg_xPos, svg_yPos){
@@ -864,6 +875,6 @@ h4 {
   
   </script>
 
-
+<div id="aTable" class="twelve columns"></div>
 </body>
 </html>
