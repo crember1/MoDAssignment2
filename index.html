@@ -171,6 +171,8 @@ h4 {
       <p style="color:white">Graph</p>
     </div>
   </div>
+  
+  <div id="chordGraph" class="one-bottom"></div>
    
   <div class="container one-bottom" >
     <div class="twelve columns" >
@@ -527,7 +529,7 @@ h4 {
 
 
         // STEP 5: Create the SVG and an empty group "g" to contain the Arc and Chord Shapes that you will be generating
-        var svgGroup = d3.select("body").append("svg")
+        var svgGroup = d3.select("#chordGraph").append("svg")
           .attr("width", 800)
           .attr("height", 800)
           .append("g")
@@ -536,7 +538,7 @@ h4 {
         // Then, append an empty "group" (g) inside it, and determine its X,Y origin
         // You need this g element in order to start embedding paths inside it and consider them as a single object.
 
-
+        
         // STEP 6: Draw Arcs/Groups
         svgGroup.selectAll(".group")
           .data(chordLayout.groups())
@@ -568,8 +570,8 @@ h4 {
           })
           .on("click", function (d,i) {
           });
-
-
+          
+          //redraw(create_svg_group("chordGraph", 800,800,xPos,yPos),od_matrix);
         // STEP 8: Change attributes of Chords (example)
         // svgGroup.selectAll(".chord")
           // .style("opacity", function(d){
@@ -660,6 +662,155 @@ h4 {
           });
           return od_matrix;
         }
+
+        function create_svg_group(div_id, svg_width, svg_height, svg_xPos, svg_yPos){
+            var svg_group = d3.select("#"+div_id).append("svg")
+              .attr("width", svg_width)
+              .attr("height", svg_height)
+              .append("g")
+              .attr("transform", "translate(" + svg_xPos + "," + svg_yPos + ")");
+            return svg_group;
+          }
+
+        function redraw(svg_group, od_matrix){
+            // Get or Generate data
+            //var nStations = get_nStations();
+           // var nTrips = get_nTrips(nStations);
+
+            //od_matrix = createMatrix(trips, stationData);
+
+            // Apply layout to data
+            chordLayout
+              .matrix(od_matrix)
+              .padding(0.01)
+              .sortGroups(d3.descending);
+
+            // Update()
+            update(svg_group, chordLayout.groups(), chordLayout.chords());
+          }
+
+        function update(svg_group, arc_data, chord_data){
+
+          // Arcs
+          // Step 1: Bind data to arcs
+          var arcs = svg_group
+          .selectAll(".arc")
+          .data(arc_data);
+
+          // Step 2: Append any new arcs if needed
+          arcs
+          .enter()
+          .append("path")
+          .attr("class", "arc");
+
+          // Step 3: Remove any excessive arcs if needed
+          arcs
+          .exit()
+          .remove();
+
+          // Step 4: Modify the arcs based on their bound data
+          arcs
+          .attr("id", function(d, i) { return "arc_" + i; })
+          .style("fill", function(d) { return color(d.index); })
+          .style("stroke", d3.rgb(0,0,0))
+          .style("stroke-width", 1)
+          .attr("d", function(d) { return arc(d)});
+
+
+          // Chords
+          // STEP 1: Bind data to chords
+          var chords = svg_group
+          .selectAll(".chord")
+          .data(chord_data);
+
+          // Step 2: Append any new chords if needed
+          chords
+          .enter()
+          .append("path")
+          .attr("class", "chord");
+
+          // Step 3: Remove any excessive chorsa if needed
+          chords
+          .exit()
+          .remove();
+
+          // Step 4: Modify the chords based on their bound data
+          chords
+          .attr("id", function(d, i) { return "chord_" + i; })
+          .style("fill", d3.rgb(180,180,180))
+          .style("stroke", d3.rgb(180,180,180).darker(3))
+          .style("opacity", 0.5)
+          .attr("d", function(d) { return chord(d)} )
+
+
+          //TickGroups
+          // Step 1: Bind data to tick groups
+          var tickGroups = svg_group
+          .selectAll(".tickGroups")
+          .data(arc_data);
+
+          // Step 2: Append any new tick groups if needed
+          tickGroups
+          .enter()
+          .append("g")
+          .attr("class", "tickGroups");
+
+          // Step 3: Remove any excessive tick groups if needed
+          tickGroups
+          .exit()
+          .remove();
+
+
+          //Ticks
+          // Step 1: Bind data
+          var ticks = tickGroups
+          .selectAll("g")
+          .data(groupTicks);
+
+          // Step 2: Append any new elements if needed
+          // SubStep 2.1: Append any new ticks if needed
+          var tick = ticks
+          .enter()
+          .append("g");
+
+          // SubStep 2.2: Within each tick append any new lines if needed
+          tick
+          .append("line")
+          .attr("x1", 1)
+          .attr("y1", 0)
+          .attr("x2", 10)
+          .attr("y2", 0)
+          .style("stroke", "#000");
+
+          // SubStep 2.3: Within each tick append any new text if needed
+          tick
+          .append("text")
+          .attr("x", 15)
+          .attr("font-size", "11px")
+          .attr("dy", ".35em");
+
+
+          // Step 3: Remove any excessive elements if needed
+          ticks
+          .exit()
+          .remove();
+
+
+          // Step 4: Modify elements based on their bound data
+          ticks
+          .attr("transform", function(d) {
+            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+            + "translate(" + (outerRadius + 10) + ",0)";
+          });
+
+          ticks
+          .selectAll("text")
+          .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-30)" : null; })
+          .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+          .text(function(d) { return d.label; });
+
+          }
+
       });
       });
     });
